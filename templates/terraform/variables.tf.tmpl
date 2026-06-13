@@ -1,0 +1,20 @@
+variable "hcloud_token" {
+  type        = string
+  sensitive   = true
+  description = "Hetzner Cloud API token. Set via: export TF_VAR_hcloud_token=..."
+}
+
+variable "ssh_public_key" {
+  type        = string
+  description = "SSH public key granted access to the server."
+}
+
+variable "server_type" {
+  type    = string
+  default = "cax11" # 2 vCPU / 4GB ARM — the cheap lightweight box
+}
+
+variable "location" {
+  type    = string
+  default = "nbg1"
+}

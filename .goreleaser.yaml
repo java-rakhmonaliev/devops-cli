@@ -1,0 +1,56 @@
+# GoReleaser config — builds cross-platform binaries, publishes a GitHub
+# release, and updates the Homebrew formula in java-rakhmonaliev/homebrew-tap.
+# Docs: https://goreleaser.com
+version: 2
+
+project_name: devopsify
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: devopsify
+    main: .
+    binary: devopsify
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w -X main.version={{ .Version }}
+
+archives:
+  - id: default
+    formats: [tar.gz]
+    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+
+checksum:
+  name_template: checksums.txt
+
+changelog:
+  use: github
+  sort: asc
+
+release:
+  github:
+    owner: java-rakhmonaliev
+    name: devops-cli
+
+brews:
+  - name: devopsify
+    repository:
+      owner: java-rakhmonaliev
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    homepage: "https://github.com/java-rakhmonaliev/devops-cli"
+    description: "One command to containerize, provision and ship any app to a VPS"
+    license: MIT
+    install: |
+      bin.install "devopsify"
+    test: |
+      system "#{bin}/devopsify", "version"

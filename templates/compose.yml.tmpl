@@ -1,0 +1,23 @@
+services:
+  web:
+    build: .
+    image: [[.Registry]]:latest
+    ports:
+      - "[[.Port]]:[[.Port]]"
+    env_file:
+      - .env
+    restart: unless-stopped
+[[if .NeedsDB]]    depends_on:
+      - db
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+[[end]]

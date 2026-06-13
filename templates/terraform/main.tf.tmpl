@@ -1,0 +1,53 @@
+terraform {
+  required_version = ">= 1.5"
+  required_providers {
+    hcloud = {
+      source  = "hetznercloud/hcloud"
+      version = "~> 1.45"
+    }
+  }
+  # For real use, move state to a remote backend (S3/GCS/TF Cloud).
+  # backend "s3" { ... }
+}
+
+provider "hcloud" {
+  token = var.hcloud_token
+}
+
+resource "hcloud_ssh_key" "default" {
+  name       = "[[.Name]]-key"
+  public_key = var.ssh_public_key
+}
+
+resource "hcloud_firewall" "web" {
+  name = "[[.Name]]-fw"
+
+  rule {
+    direction  = "in"
+    protocol   = "tcp"
+    port       = "22"
+    source_ips = ["0.0.0.0/0", "::/0"]
+  }
+  rule {
+    direction  = "in"
+    protocol   = "tcp"
+    port       = "80"
+    source_ips = ["0.0.0.0/0", "::/0"]
+  }
+  rule {
+    direction  = "in"
+    protocol   = "tcp"
+    port       = "443"
+    source_ips = ["0.0.0.0/0", "::/0"]
+  }
+}
+
+resource "hcloud_server" "app" {
+  name         = "[[.Name]]"
+  image        = "ubuntu-24.04"
+  server_type  = var.server_type
+  location     = var.location
+  ssh_keys     = [hcloud_ssh_key.default.id]
+  firewall_ids = [hcloud_firewall.web.id]
+  user_data    = file("${path.module}/cloud-init.yaml")
+}

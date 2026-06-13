@@ -1,0 +1,8 @@
+# Built binary (name comes from `go build -o devopsify .`)
+/devopsify
+
+# GoReleaser output
+/dist/
+
+# macOS
+.DS_Store

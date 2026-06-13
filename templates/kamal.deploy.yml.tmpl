@@ -1,0 +1,24 @@
+# Kamal 2 deploy config. Docs: https://kamal-deploy.org
+service: [[.Name]]
+image: [[.Registry]]
+
+servers:
+  web:
+    - <SERVER_IP>   # from: terraform -chdir=terraform output -raw server_ip
+
+registry:
+  server: ghcr.io
+  username: <GITHUB_USERNAME>
+  password:
+    - KAMAL_REGISTRY_PASSWORD   # a GitHub PAT or the GITHUB_TOKEN in CI
+
+proxy:
+  ssl: true
+  host: example.com            # your domain; kamal-proxy gets a Let's Encrypt cert
+  app_port: [[.Port]]
+
+env:
+  clear:
+    PORT: "[[.Port]]"
+  secret:
+    - SECRET_KEY

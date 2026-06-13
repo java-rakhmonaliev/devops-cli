@@ -1,0 +1,4 @@
+output "server_ip" {
+  value       = hcloud_server.app.ipv4_address
+  description = "Public IPv4. Put this in config/deploy.yml under servers.web."
+}
