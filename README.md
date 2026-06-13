@@ -9,6 +9,7 @@ compiles to a single static binary.
 ### Homebrew (recommended)
 
 ```sh
+brew tap java-rakhmonaliev/tap https://github.com/java-rakhmonaliev/devops-cli
 brew install java-rakhmonaliev/tap/devopsify
 ```
 

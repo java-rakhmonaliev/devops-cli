@@ -2,7 +2,8 @@ name: release
 
 # Tag a version (e.g. `git tag v0.1.0 && git push origin v0.1.0`) to cut a
 # release: GoReleaser builds the binaries, publishes the GitHub release, and
-# pushes an updated formula to java-rakhmonaliev/homebrew-tap.
+# commits the updated Homebrew cask to Casks/ in this repo (which doubles as
+# the tap). Uses the built-in GITHUB_TOKEN — no extra secrets required.
 on:
   push:
     tags:
@@ -29,4 +30,3 @@ jobs:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}

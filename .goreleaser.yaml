@@ -43,10 +43,16 @@ release:
 
 homebrew_casks:
   - name: devopsify
+    # The devops-cli repo doubles as its own Homebrew tap: GoReleaser commits
+    # the generated cask to Casks/ on the default branch, using the Actions
+    # GITHUB_TOKEN (no separate repo or PAT needed). To switch to a dedicated
+    # java-rakhmonaliev/homebrew-tap later, change name to "homebrew-tap" and
+    # token to "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}".
     repository:
       owner: java-rakhmonaliev
-      name: homebrew-tap
-      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+      name: devops-cli
+      token: "{{ .Env.GITHUB_TOKEN }}"
+    directory: Casks
     homepage: "https://github.com/java-rakhmonaliev/devops-cli"
     description: "One command to containerize, provision and ship any app to a VPS"
     binaries:
