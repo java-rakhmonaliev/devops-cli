@@ -41,7 +41,7 @@ release:
     owner: java-rakhmonaliev
     name: devops-cli
 
-brews:
+homebrew_casks:
   - name: devopsify
     repository:
       owner: java-rakhmonaliev
@@ -49,8 +49,13 @@ brews:
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
     homepage: "https://github.com/java-rakhmonaliev/devops-cli"
     description: "One command to containerize, provision and ship any app to a VPS"
-    license: MIT
-    install: |
-      bin.install "devopsify"
-    test: |
-      system "#{bin}/devopsify", "version"
+    binaries:
+      - devopsify
+    # The binary is unsigned; strip the quarantine flag so macOS Gatekeeper
+    # doesn't block it on first run (keeps `brew install` zero-friction).
+    hooks:
+      post:
+        install: |
+          if OS.mac?
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/devopsify"]
+          end
